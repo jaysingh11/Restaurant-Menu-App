@@ -1,76 +1,64 @@
 import React,{Component} from 'react'; 
+import {baseUrl} from './shared/baseUrl';
 import {connect} from 'react-redux';
-import {fetchDishes} from './testing/ACTIONcreator';
-import {View,Text, Image, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
- 
-const mapStateToProps = state => {
-	return {dishes: state.dishes};
-}
+//import {fetchDishes} from './testing/ACTIONcreator';
+import {postComment, fetchComments} from './redux/ActionCreators';
+import {View,Text, Image, StyleSheet, Button} from 'react-native';
 
-const mapDispatchToProps = dispatch =>( {
-	fetch_dishes: () => dispatch(fetchDishes())               ///jdkffghsdhksdafhefjkhsdjkfledfkwehflehksd
-})
+
+
+const mapStateToProps = state =>{
+	return {comments: state.comments};
+};
+
+const mapDispatchToProps = dispatch => ({
+	fetchComments: ()=>dispatch(fetchComments()),
+	postComment: (newComment) => dispatch(postComment(newComment.dishId, newComment.rating, newComment.author, newComment.comment))
+});
+
 
 class C extends Component{
 	
-	 componentDidMount() {
-		this.props.fetch_dishes()
-	 }
-	 
-	 render(){
-
-	 	 return(
-		 	 <View style = {{margin:50}}> 
-				<Text style= {styles.a}>  {this.props.dishes[0].name} </Text> 
-			 </View>
-		 );
-	 }
-}export default connect(mapStateToProps, mapDispatchToProps)(C);
-
-
-/*
-
-{this.props.dishes[0].name}
-export default class C extends Component{
-	state:{
-		password:string,
-		isPasswordVisible:boolean,
-		toggleText:string
-	}
-	
 	constructor(Props){
 		super(Props);
-		this.state={
-			password:"",
-			isPasswordVisible:true,
-			toggleText:'Show'
-		};
+		this.state = {title: 'add item to JSON', color: 'green'}
 	}
 
-	handleToggle=()=>{
-		
-		const{isPasswordVisible} = this.state;
-		if(isPasswordVisible){this.setState({isPasswordVisible:false,toggleText:'Hide'});}
-		else {this.setState({isPasswordVisible:true,toggleText:'Show'});}
-	};
+	componentDidMount() {
+		 this.props.fetchComments()
+	}
 
+	toggle(){
+		this.setState({title: 'Item added', color:'black'});
+		setTimeout(()=>{
+			this.setState({title: 'add item to JSON',  color: 'green'});
+		}, 2000)
+	}
 
 	render(){
+		const newComment = {rating: 3, author: "jay", comment: "hi how r u", dishId: 7 };
+		const size = this.props.comments.length;
+		const array = this.props.comments
 		return (
 			<View style = {styles.container}>
-				<TextInput secureTextEntry={this.state.isPasswordVisible} placeholder='Password' style = {styles.a}/>
-				<TouchableOpacity onPress={this.handleToggle}>
-					<Text style={styles.b}> {this.state.toggleText} </Text>
-				</TouchableOpacity>
+			<View style = {{margin:50}}></View>
+				<Button
+					title = {this.state.title}
+					color = {this.state.color}
+					onPress = {()=>{this.props.postComment(newComment); this.toggle();} }
+					/>
+				<Text style = {{marginVertical: 20, color: 'black', fontWeight: 'bold'}}> New added Comment </Text>
+				<Text style = {{marginVertical: 30}}> {(size==0)? "jay": array[size-1].comment} </Text>
+					
 			</View>
 		);
 	}
-}
+}export default connect(mapStateToProps, mapDispatchToProps)(C);
 
-*/
+
 const styles = StyleSheet.create({
 
-	container : {width:160, height: 60, margin:0, backgroundColor:'green', justifyContent:'center', alignItems: 'center'},
+	container : {flex:1, margin:10, backgroundColor:'pink', alignItems: 'center'},
 
 	a : { width: 150, height:100, backgroundColor: 'pink', color:'black', fontSize:20 },
 	b : {fontSize: 15, textAlign: 'center'}

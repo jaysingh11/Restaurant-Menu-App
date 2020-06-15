@@ -1,6 +1,32 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
+
+//add new comment
+export const postComment = (Id, dishId, rating, author, comment)=>(dispatch) => {
+	const d = new Date();
+    const date = d.toISOString();
+
+	const newComment = {
+				"id": Id,
+				"dishId": dishId,
+				"rating": rating,
+				"comment": comment,
+				"author": author,
+				"date": date
+			};
+
+	fetch(baseUrl+'comments', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(newComment)
+	 });
+
+	setTimeout(()=>dispatch(addComment(newComment)),2000);
+}
 // for comments
 export const fetchComments = () => (dispatch) => {
 	return fetch(baseUrl+'comments')
@@ -31,6 +57,10 @@ export const addComments = (comments) =>({
 	payload: comments
 });
 
+export const addComment = (newComment)=>({
+	type: ActionTypes.ADD_COMMENT,
+	payload: newComment
+});
 
 // for dishes
 export const fetchDishes = () => (dispatch) => {

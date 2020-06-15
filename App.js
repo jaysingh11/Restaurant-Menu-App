@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
 //import { ConfigureStore } from './testing/ConfigStore';
 //import C from './file';
-YellowBox.ignoreWarnings(['Warning: ReactNative.createElement']);
+//YellowBox.ignoreWarnings(['Warning: ReactNative.createElement']);
 //consol.ignoreWarnings = ['Warning: ReactNative.createElement'];
 
 const store = ConfigureStore();
