@@ -1,21 +1,22 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, ScrollView, FlatList, Modal, Button} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, FlatList, Modal, Button, Alert} from 'react-native';
 import {Card, Icon, Rating, Input } from 'react-native-elements';
 import {connect} from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import {postComment} from '../redux/ActionCreators';
-
-let isVisible = false;
+import { postFavorite } from '../redux/ActionCreators';
 
 
 const mapStateToProps = state =>{
 	return {
 		dishes: state.dishes,
-		comments: state.comments
+		comments: state.comments,
+		favorites: state.favorites
 	};
 };
 
 const mapDispatchToProps = dispatch => ({
+	postFavorite: (dishId) => dispatch(postFavorite(dishId)),
 	postComment: (newComment) => dispatch(postComment(newComment.Id, newComment.dishId, newComment.rating, newComment.author, newComment.comment))
 });
 
@@ -82,7 +83,7 @@ function RenderDish(props){
 							name ={props.favorite ? 'heart':'heart-o'}
 							type='font-awesome'
 							color='#f50'
-							onPress={()=>props.favorite?consol.log('Already favorite'):props.onPress()}
+							onPress={()=>props.favorite?Alert.alert('Already favorite'):props.onPress()}
 						   />
 						<View style={{width:30}}></View>
 						<Icon
@@ -127,16 +128,16 @@ function RenderComments(props){
 class Dishdetail extends Component{
 	constructor(props){
 		super(props);
-		this.state = { favorites:[], isVisible: false };
+		this.state = { isVisible: false };
 	};
 
 	toggleCommentModal(){
 		this.setState({isVisible: !this.state.isVisible})
 	}
 
-	markFavorite(dishId){
-		this.setState({favorites: this.state.favorites.concat(dishId)})
-	}
+	markFavorite(dishId) {
+        this.props.postFavorite(dishId);
+    }
 
 	static navigationOptions = { title: 'Dish details'};
 
@@ -145,7 +146,7 @@ class Dishdetail extends Component{
 		return (
 				<ScrollView>
 					 <RenderDish dish = {this.props.dishes.dishes[+dishId]}
-						favorite = {this.state.favorites.some(el=>el==dishId)}
+						favorite = {this.props.favorites.some(el=>el==dishId)}
 						toggleCommentModal = {()=>this.toggleCommentModal()}
 						onPress = {()=>this.markFavorite(dishId)}
 					 />
