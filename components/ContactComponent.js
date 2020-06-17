@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Card} from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
 
 const address_info = [
 			'121, Clear Water Bay Road',
@@ -24,6 +25,7 @@ class Contact extends Component{
 		  const { navigate } = this.props.navigation;
 
 	  	  return(
+		     <Animatable.View animation="fadeInDown" duration={2000} delay={100}> 
 				<Card title = "Contact Information" >
 
 					<Text style = {styles.txt}> {address_info[0]}</Text>
@@ -33,6 +35,7 @@ class Contact extends Component{
 					<Text style = {styles.txt}> {address_info[4]}</Text>
 					<Text style = {styles.txt}> {address_info[5]}</Text>
 				</Card>
+		      </Animatable.View>
 		  );
 	  }
 }
