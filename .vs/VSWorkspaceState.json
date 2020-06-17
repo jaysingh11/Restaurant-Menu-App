@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\components",
     "\\redux"
   ],
-  "SelectedNode": "\\redux\\dishes.js",
+  "SelectedNode": "\\redux\\ActionCreators.js",
   "PreviewInSolutionExplorer": false
 }
