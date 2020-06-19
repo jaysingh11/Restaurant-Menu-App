@@ -10,7 +10,6 @@ import {promotions} from './promotions';
 import {leaders} from './leaders';
 import { favorites } from './favorites';
 
-
 export const ConfigureStore = () => {
 	const config = {
 		key: 'root',

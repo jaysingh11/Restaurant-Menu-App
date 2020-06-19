@@ -4,8 +4,7 @@ import {Card, Icon, Rating, Input } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import {postComment} from '../redux/ActionCreators';
-import { postFavorite } from '../redux/ActionCreators';
+import { postComment, postFavorite } from '../redux/ActionCreators';
 
 
 const mapStateToProps = state =>{
@@ -20,6 +19,7 @@ const mapDispatchToProps = dispatch => ({
 	postFavorite: (dishId) => dispatch(postFavorite(dishId)),
 	postComment: (newComment) => dispatch(postComment(newComment.Id, newComment.dishId, newComment.rating, newComment.author, newComment.comment))
 });
+
 
 
 function HandleComment(props){
@@ -77,7 +77,14 @@ function RenderDish(props){
             return true;
         else
             return false;
-    }
+    };
+
+	const recognizeComment = ({ moveX, moveY, dx, dy })=>{
+		if ( dx > 200 )
+            return true;
+        else
+            return false;
+	};
 
     const panResponder = PanResponder.create({
 
@@ -101,6 +108,8 @@ function RenderDish(props){
                     ],
                     { cancelable: false }
                 );
+			else if(recognizeComment(gestureState))
+				props.toggleCommentModal();
 
             return true;
         }
@@ -110,7 +119,9 @@ function RenderDish(props){
 	if(dish!=null){
 		return (
 			<Animatable.View animation="fadeInDown" duration={2000} delay={1000}
-			     ref={this.handleViewRef} {...panResponder.panHandlers}> 
+			    ref={this.handleViewRef} 
+				{...panResponder.panHandlers}
+				> 
 
 				<Card title = "Recipe"
 					featuredTitle = {dish.name}
@@ -196,7 +207,7 @@ class Dishdetail extends Component{
 						onPress = {()=>this.markFavorite(dishId)}
 					 />
 					 <RenderComments comments={this.props.comments.comments.filter((comment)=>comment.dishId===dishId)}/>
-
+					 
 					 <Modal
 						animationType = {'slide'}
 						transparent = {false}
