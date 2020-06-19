@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, ScrollView, FlatList, Modal, Button, Alert, PanResponder} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, FlatList, Modal, Button, Alert, PanResponder, Share} from 'react-native';
 import {Card, Icon, Rating, Input } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
@@ -115,6 +115,15 @@ function RenderDish(props){
         }
     })
 
+	const shareDish = (title, message, url) => {
+        Share.share({
+            title: title,
+            message: title + ': ' + message + ' ' + url,
+            url: url
+        },{
+            dialogTitle: 'Share ' + title
+        })
+    }
 
 	if(dish!=null){
 		return (
@@ -139,7 +148,6 @@ function RenderDish(props){
 							color='#f50'
 							onPress={()=>props.favorite?Alert.alert('Already favorite'):props.onPress()}
 						   />
-						<View style={{width:30}}></View>
 						<Icon
 							raised
 							reverse
@@ -147,6 +155,15 @@ function RenderDish(props){
 							type='font-awesome'
 							color='#512DA8'
 							onPress = {() => props.toggleCommentModal()}
+							/>
+						<Icon
+                            raised
+                            reverse
+                            name='share'
+                            type='font-awesome'
+                            color='#51D2A8'
+                            style={styles.cardItem}
+                            onPress={() => shareDish(dish.name, dish.description, baseUrl + dish.image)} 
 							/>
 					</View>
 			    </Card>
